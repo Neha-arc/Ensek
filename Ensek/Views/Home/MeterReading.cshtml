@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "MeterReading";
+}
+<h2>Meter Reading.</h2>
+
+
+<p class="lead">Please upload meter reading.</p>
+<div class="form-group">
+    @Html.Label("Source File", htmlAttributes: new { @class = "control-label required pb-0 mb-0" })
+    <label class="control-label text-secondary small col-md-12 ">The required format for uploading the meter reading is .csv</label>
+    <input type="file" class="form-control-file border" id="dataFile" name="upload" accept=".csv" required />
+</div>
+<button id="btn-upload" class="btn-lg btn-primary">Upload</button>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#btn-upload").on("click", function () {
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+                    var fileUpload = $("#dataFile").get(0);
+                    var files = fileUpload.files;
+
+                    // Create FormData object
+                    var fileData = new FormData();
+
+                    fileData.append("File", files[0]);
+
+                    if (confirm("Are you sure you want to upload?")) {
+                        $.ajax({
+
+                            url: "/api/meterreadings",
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (result) {
+
+                                alert(result);
+                            }
+                        });
+                    }
+
+                }
+
+                });
+        });
+
+    </script>
+}
+
